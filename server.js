@@ -4,6 +4,7 @@ const dotenv = require("dotenv").config({ path: '../.env' });
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const corsConfiguration = require("./utils/corsConfiguration")
 // const fileUpload = require('express-fileupload')
 const path = require("path");
 const stripe = require("stripe")(
@@ -25,6 +26,7 @@ const stripeRouter = require("./routes/stripe");
 const bookingsRouter = require("./routes/bookings");
 const createError = require("./utils/error");
 const app = express();
+const PORT = process.env.PORT || 4000
 
 const connect = async () => {
   try {
@@ -53,9 +55,7 @@ const rateLimiter = expressRateLimit({
 // app.use('/api', rateLimiter)
 
 app.use(
-  cors({
-    credentials: true,
-  })
+  cors(corsConfiguration)
 );
 app.use(cookieParser());
 
@@ -216,7 +216,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const server = app.listen(4000, () => {
+const server = app.listen(PORT, () => {
   connect();
   console.log("listening on port 4000");
 });
