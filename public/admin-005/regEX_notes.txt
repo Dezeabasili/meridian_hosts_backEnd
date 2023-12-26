@@ -1,0 +1,196 @@
+“Four Cs”: Clear, Concise, Complete, and Correct
+
+metacharacters: a metacharacter is a character that represents something other than 
+itself to help match patterns
+
+character class: denoted with square brackets eg: the term [ae] means “use either a or e”.
+The order of the letters in the square brackets is irrelevant.
+
+The following metacharacters are useful with REs:
+The “.” metacharacter matches any single character (except a linefeed)
+The ? metacharacter refers to 0 or 1 occurrences of something
+The + metacharacter refers to 1 or more occurrences of something
+The * metacharacter refers to 0 or more occurrences of something
+The ^ metacharacter matches the beginning of a line (or excludes characters if used in a square bracket)
+The $ metacharacter matches the end of a line 
+The | metacharacter is an “OR” operator that allows for alternatives
+The \ metacharacter “escapes” metacharacters and treats them as normal characters.
+The expression \s matches a single whitespace.	[ \t\r\n]
+Use \S when you want to match non-whitespace characters.	[^ \t\r\n]
+The expression \w matches a single word, where a “word” consists only of letters, digits, or underscores.
+To match, a “word” must either start the line or be preceded by a non-word character, such as whitespace 
+or a period.	[a-zA-Z0-9_]
+The expression \W matches a non-word.
+There is a simpler way to match a digit: use the \d character class.	[0-9]
+use \D for non-digit character.	[^0-9]
+
+
+Note that “something” in the preceding descriptions can refer to a digit, 
+letter, word, or more complex combinations. 
+Character classes enable you to express a range of digits, letters, or a combination of both. 
+For example, the character class [0-9] matches any single digit; 
+[a-z] matches any lowercase letter; and [A-Z] matches any uppercase letter. 
+You can also specify subranges of digits or letters, such as [3-7], 
+[g-p], and [F-X], as well as other combinations:
+[0-9][0-9] matches a consecutive pair of digits
+[0-9[0-9][0-9] matches three consecutive digits
+\d{3} also matches three consecutive digits
+
+Character classes
+.	any character except newline
+\w \d \s	word, digit, whitespace
+\W \D \S	not word, not digit, not whitespace
+[abc]	any of a, b, or c
+[^abc]	not a, b, or c
+[a-g]	character between a & g
+
+Anchors
+^abc$	start / end of the string
+\b	word boundary
+Escaped characters
+\. \* \\	escaped special characters
+\t \n \r	tab, linefeed, carriage return
+\u00A9	unicode escaped ©
+
+Groups & Lookaround
+(abc)	capture group
+\1	backreference to group #1
+(?:abc)	non-capturing group
+(?=abc)	positive lookahead
+(?!abc)	negative lookahead
+
+Quantifiers & Alternation
+a* a+ a?	0 or more, 1 or more, 0 or 1
+a{5} a{2,}	exactly five, two or more
+a{1,3}	between one & three
+a+? a{2,}?	match as few as possible
+ab|cd	match ab or cd
+
+1. Specifying a Range of Letters
+all the lowercase letters of the alphabet: [a-z]
+We can also specify a single letter inside the square brackets. For example, 
+the term [a] is an RE that matches the letter a.
+
+2. Working with the “^” and “$” metacharacters:
+^ is used for matching a pattern that starts from the beginning of a line.
+For example, the RE ^the matches any line that start with the string the
+On the other hand, the RE ^[the] matches any line that starts with one 
+of the letters t, h, or e,
+
+3. Excluding Matches with the “^” Metacharacter
+The metacharacter ^ has two different interpretations, based on whether 
+it’s specified inside or before a pair of square brackets. 
+If it’s inside the square brackets, it means do not use any of the letters that appear inside 
+the square brackets, and if it’s outside the brackets it means “a matching line must start with the RE 
+that immediately follows the ^ character.
+
+For example, the following RE matches any lines that start with the letter t:	^[t]
+By contrast, the following expression matches any line that does not start with the letter t:	^[^t]
+^[a-z] matches any lowercase letter at the beginning of a line of text
+^[^a-z] matches any line of text that does not start with a lowercase letter
+([a-z]|[A-Z]): either a lowercase letter or an uppercase letter
+(^[a-z][a-z]): an initial lowercase letter followed by another lowercase letter
+(^[^a-z][A-Z]): anything other than a lowercase letter followed by an uppercase letter
+
+4. Matches with the “$” Metacharacter
+The metacharacter $ enables you to match letters or words that appear at the end of a text string or 
+a line of text.
+For example, the following expression matches any line that end with the word gray:	gray$
+
+5. Working with “.”, “*”, and “\” Metacharacters
+The metacharacter “.” matches any single character (except a linefeed). 
+the metacharacter “*” matches zero or more occurrences of any character.
+“*” is useful when you want to match the intervening letters between a 
+start character (or word) and an end character (or word). 
+For example, if you want to match the lines that start with the letter t, followed by any character, and 
+then followed by an occurrence of the word gray:	^t.*gray
+
+if you want to match the lines that start with the word the, followed by an 
+occurrence of the word gray:	^the.*gray
+
+6. Checking for Whitespaces	
+Match lines that start with a whitespace with this expression:	^[ ]
+Match lines that end with a whitespace with this expression:	[ ]$
+Match lines that contain only whitespaces with this expression, which literally means 
+“match lines that begin with whitespace, and end in one or more instances of whitespace.”:	^[ ][ ]+$	
+
+Note that matching an empty line is different from matching a line containing only whitespaces.
+Match empty lines with this very simple expression:	^$ 
+
+7. Escaping a Metacharacter
+If you need to treat a metacharacter as a literal character, use the backslash “\” character to “escape” its 
+interpretation as a metacharacter.
+if you want to match the lines that start with the letter t and also end with the word gray:	^t.*gray\.$
+If you want to match the lines that contain a “.”, use this expression:	\.
+If you want to match the lines that match .doc, use this expression:	\.doc
+The following expression matches the lines that end with .doc:	\.doc$
+
+8.The Extended “?” Metacharacters “+”, “?”, and “|”
+“?” means “match exactly zero or one instance of the previous element”
+“+” means “match one or more instances of the previous element”
+“|”is used as a “logical or” in an extended regular expression
+
+9. Using \s and \S in REs
+The expression \s matches a single whitespace.
+The following expression matches lines that start with one or more whitespaces, then any number of characters, 
+and are then followed by the string cat:	\s+.*cat
+Use \S when you want to match non-whitespace characters. For example, the following expression matches lines that 
+do not start with a whitespace:		^\S+
+
+10. Using \W And \w in REs
+The expression \w matches a single word, where a “word” consists only of letters, digits, or underscores.
+To match, a “word” must either start the line or be preceded by a non-word character, such as whitespace or a period. 
+The following expression matches lines that start with a word:	^\w"
+The expression \W matches a non-word.
+
+11. Using \B and \b in REs
+The simplest scenario for \b involves an exact match of a string without 
+matching longer strings that contain the given string.
+The following expression matches lines that do not start with a word, and 
+contain the string cat somewhere in the line: 	^\W.*\bcat
+
+12. Working with \d and \D in REs
+There is a simpler way to match a digit: use the \d character class.
+match lines that contain three consecutive digits:	\d{3}
+use \D for non-digit character.
+
+13. How to name a capture group
+for example, ?<tag> indicates the group name for (?<tag>\w+>) in the regEX below and and referred to
+as \k<tag>
+<(?<tag>\w+>).+?</\k<tag>
+
+14. Positive look ahead (?=...)
+for exmaple; password should contain 
+between 8 and 24 characters, 
+at least a block letter, 
+at least a small letter,
+at least a digit,
+at least one of these special character, !@#$%&,
+	/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&]).{8, 24}$/
+or
+	/^(?=.{8, 24})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&]).*$/
+
+
+15. negative look ahead (?!...)
+for exmaple; password should contain 
+between 8 and 24 characters, 
+at least a block letter, 
+at least a small letter,
+at least a digit,
+none of these special character, !@#$%&,
+	/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?!.*[!@#$%&]).{8, 24}$/
+or
+	/^(?=.{8, 24})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?!.*[!@#$%&]).*$/
+
+16. positive Lookbehind assertion: (?<=...)
+for example, find the number that is preceded by the $
+	/(?<=\$)\d+
+$199 will match the expression above but 199 will not
+
+17. negative Lookbehind assertion: (?<!...)
+
+
+18. match last occurence of a word
+for example, find the last occurence of and
+	/and(?!.*and)/
+
