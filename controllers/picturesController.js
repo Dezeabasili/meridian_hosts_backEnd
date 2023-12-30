@@ -10,7 +10,8 @@ const getCities = async (req, res, next) => {
             "..",
             "public",
             "hotel-cities",
-            cityName
+            cityName,
+            ".jpg"
           );
           res.status(200).sendFile(filePath);
 
