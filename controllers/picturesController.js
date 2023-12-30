@@ -18,3 +18,5 @@ const getCities = async (req, res, next) => {
         next(err)
     }
 }
+
+module.exports = {getCities}
