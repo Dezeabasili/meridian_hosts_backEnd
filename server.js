@@ -81,6 +81,7 @@ app.use(trimRequestBody);
 // serving static files
 app.use(express.static(path.join(__dirname, "public")));
 app.use('/hotel-cities/', express.static(path.join(__dirname, "hotel-cities")));
+app.use('/hotel-types/', express.static(path.join(__dirname, "hotel-types")));
 // app.use(express.static("public"));
 // app.use('/api/v1/pictures', express.static("public"));
 
