@@ -79,7 +79,10 @@ app.use(trimRequestBody);
 // app.use(express.json({ limit: '10kb' }))
 
 // serving static files
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
+// app.use('/api/v1/pictures', express.static(path.join(__dirname, "public")));
+app.use(express.static("public"));
+app.use('/api/v1/pictures', express.static("public"));
 
 // data sanitization against NoSQL query injection
 // app.use(expressMongoSanitize())
