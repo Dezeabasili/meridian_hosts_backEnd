@@ -95,7 +95,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // app.use(hpp())
 
 // static files
-app.use(express.static(`${__dirname}/public`));
+// app.use(express.static(`${__dirname}/public`));
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", usersRouter);
