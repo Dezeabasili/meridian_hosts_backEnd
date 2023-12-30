@@ -24,6 +24,7 @@ const roomsRouter = require("./routes/rooms");
 const reviewsRouter = require("./routes/reviews");
 const stripeRouter = require("./routes/stripe");
 const bookingsRouter = require("./routes/bookings");
+const picturesRouter = require("./routes/pictures");
 const createError = require("./utils/error");
 const app = express();
 const PORT = process.env.PORT || 4000
@@ -100,6 +101,7 @@ app.use("/api/v1/rooms", roomsRouter);
 app.use("/api/v1/reviews", reviewsRouter);
 app.use("/api/v1/stripe", stripeRouter);
 app.use("/api/v1/bookings", bookingsRouter);
+app.use("/api/v1/pictures", picturesRouter);
 
 // app.post('/hooks', express.raw({type: 'application/json'}), async (req, res) => {
 //     let signinSecret = "whsec_855119b96a4df9440f13897a880d6bfd37170ee714729d5bf3f441666ba1fba0"
