@@ -20,7 +20,7 @@ const upload_file = async (req, res, next) => {
 
     // check if file is the user's profile photo
     if (
-      Object.keys(uploadedFiles)[0].startsWith("custPPP")
+      Object.keys(uploadedFiles)[0].startsWith("cPPP")
     ) {
       // filePath = path.join(__dirname, '..', 'public', user.username, Object.keys(uploadedFiles)[0])
       if (!fs.existsSync(path.join(__dirname, "..", "profilePic", user._id))) {
