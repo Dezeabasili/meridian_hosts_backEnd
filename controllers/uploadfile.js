@@ -23,15 +23,15 @@ const upload_file = async (req, res, next) => {
       Object.keys(uploadedFiles)[0].startsWith("customerPreferredProfilePhoto")
     ) {
       // filePath = path.join(__dirname, '..', 'public', user.username, Object.keys(uploadedFiles)[0])
-      if (!fs.existsSync(path.join(__dirname, "..", "profilepictures", user._id))) {
+      if (!fs.existsSync(path.join(__dirname, "..", "profilePictures", user._id))) {
         await fsPromises.mkdir(
-          path.join(__dirname, "..", "profilepictures", user._id)
+          path.join(__dirname, "..", "profilePictures", user._id)
         );
       }
       filePath = path.join(
         __dirname,
         "..",
-        "profilepictures",
+        "profilePictures",
         user._id,
         Object.keys(uploadedFiles)[0]
       );
