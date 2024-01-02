@@ -23,22 +23,26 @@ const upload_file = async (req, res, next) => {
       Object.keys(uploadedFiles)[0].startsWith("customerPreferredProfilePhoto")
     ) {
       // filePath = path.join(__dirname, '..', 'public', user.username, Object.keys(uploadedFiles)[0])
-      if (!fs.existsSync(path.join(__dirname, "..", "public", user.username))) {
+      if (!fs.existsSync(path.join(__dirname, "..", "profilepictures", user._id))) {
         await fsPromises.mkdir(
-          path.join(__dirname, "..", "public", user.username)
+          path.join(__dirname, "..", "profilepictures", user._id)
         );
       }
       filePath = path.join(
         __dirname,
         "..",
-        "public",
-        user.username,
+        "profilepictures",
+        user._id,
         Object.keys(uploadedFiles)[0]
       );
 
-      sharp(Object.values(uploadedFiles)[0].data)
-        .resize(500, 500)
-        .toFile(filePath);
+      Object.values(uploadedFiles)[0].mv(filePath, (err) => {
+        if (err) return res.json(`${fileName} was not saved. Try again`);
+      });
+
+      // sharp(Object.values(uploadedFiles)[0].data)
+      //   .resize(500, 500)
+      //   .toFile(filePath);
 
       // await Object.values(uploadedFiles)[0].mv(filePath)
       // update user profile photo in database
