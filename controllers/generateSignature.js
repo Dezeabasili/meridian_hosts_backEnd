@@ -19,12 +19,12 @@ const generateSignature = async (req, res, next) => {
 const timestamp = Math.round(new Date().getTime() / 1000)
 
 const signature = cloudinary.utils.api_sign_request({
-    timestamp,
-    asset_folder
+    timestamp: timestamp,
+    asset_folder: asset_folder
 }, process.env.CLOUDINARY_API_SECRET)
     
 
-    res.status(200).json({ timestamp, signature });
+    res.status(200).json({ timestamp: timestamp, signature: signature });
   } catch (err) {
     next(err);
   }
