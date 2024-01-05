@@ -13,6 +13,7 @@ cloudinary.config({
 // The models will also be updated to store the URL's from Cloudinary.
 // This is to allow the user to upload files.
 const generateSignature = async (req, res, next) => {
+  
     const folder = req.body.folder
     if (!folder) return next(createError('fail', 404, 'folder name is required'))
   try {
