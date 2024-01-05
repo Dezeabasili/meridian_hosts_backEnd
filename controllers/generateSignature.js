@@ -13,14 +13,14 @@ cloudinary.config({
 // The models will also be updated to store the URL's from Cloudinary.
 // This is to allow the user to upload files.
 const generateSignature = async (req, res, next) => {
-    const { asset_folder } = req.body
-    if (!asset_folder) return next(createError('fail', 404, 'folder name is required'))
+    const { folder } = req.body
+    if (!folder) return next(createError('fail', 404, 'folder name is required'))
   try {
 const timestamp = Math.round(new Date().getTime() / 1000)
 
 const signature = cloudinary.utils.api_sign_request({
     timestamp: timestamp,
-    asset_folder: asset_folder
+    folder: folder
 }, process.env.CLOUDINARY_API_SECRET)
     
 
