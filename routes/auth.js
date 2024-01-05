@@ -15,7 +15,7 @@ router.post('/login', authController.login)
 router.get('/renew_access_token', renew_access_token)
 router.get('/logout', logout)
 router.post('/upload', verifyAccessToken, fileUpload({ createParentPath: true }), upload_file)
-router.get('/generatesignature', verifyAccessToken, generateSignature)
+router.post('/generatesignature', verifyAccessToken, generateSignature)
 router.post('/forgotpassword', authController.forgotPassword)
 
 router.post('/changepassword',verifyAccessToken, authController.changePassword)
