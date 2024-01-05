@@ -219,7 +219,8 @@ const upload_file = async (req, res, next) => {
 
 
       // update user profile photo in database
-
+      if (!(req.body.photoURL))
+      return next(createError("fail", 404, "no secure URL from cloudinary"));
       user.photo = req.body.photoURL;
       await user.save();
 
