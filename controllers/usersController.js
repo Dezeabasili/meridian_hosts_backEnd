@@ -235,18 +235,12 @@ const seeMyPhoto = async (req, res, next) => {
         "public",
         "default_profile_pic.png"
       );
-    } else {
-      filePath = path.join(
-        __dirname,
-        "..",
-        "public",
-        loggedInUser.username,
-        loggedInUser.photo
-      );
-    }
 
-    // res.status(200).sendFile(filePath)
-    res.status(200).sendFile(filePath);
+      return res.status(200).sendFile(filePath)
+    } else {
+      return res.status(200).json({data: loggedInUser.photo});
+    }
+ 
   } catch (err) {
     next(err);
   }
