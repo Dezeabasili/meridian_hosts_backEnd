@@ -16,7 +16,7 @@ const generateSignature = async (req, res, next) => {
     const { folder } = req.body
     if (!folder) return next(createError('fail', 404, 'folder name is required'))
   try {
-const timestamp = Math.round((new Date).getTime() / 1000)
+const timestamp = Math.round(new Date().getTime() / 1000)
 
 const signature = cloudinary.utils.api_sign_request({
     timestamp, 
