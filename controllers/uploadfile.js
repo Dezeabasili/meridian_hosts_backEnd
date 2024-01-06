@@ -24,11 +24,11 @@ const upload_file = async (req, res, next) => {
       user.photo = req.body.urlArray[0];
       await user.save();
     } else if (req.body.fileCode == "hotelphoto") {
-      const hotel = await Hotel.findById(req.body.id);
-      if (!hotel)
-        return next(createError("fail", 404, "this hotel does not exist"));
-      hotel.photos = req.body.urlArray[0];
-      await hotel.save()
+
+      await Hotel.findByIdAndUpdate(req.body.id, {
+        $set: { photos: req.body.urlArray[0] },
+      });
+
     }
 
     res.status(200).json("file(s) uploaded successfully");
