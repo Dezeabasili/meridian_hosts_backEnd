@@ -5,7 +5,7 @@ const fsPromises = require('fs').promises
 require('dotenv').config()
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-const passwordResetMail = async (newUser, passwordReset) => {
+const passwordResetMail = async (person, passwordReset) => {
     try {
         // const filePath = await fsPromises.readFile(path.join(__dirname, '..', 'public', 'admin-005', 'customerPreferredProfilePhoto2.jpg'))
         // let buffer = Buffer.from(filePath, "utf-8").toString("base64")
@@ -24,7 +24,7 @@ const passwordResetMail = async (newUser, passwordReset) => {
             to: [
                 {
                     email: "ezeabasili@yahoo.co.uk",
-                    name: newUser.name
+                    name: person.name
                 }
             ],
             from: {
