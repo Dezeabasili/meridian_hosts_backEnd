@@ -164,8 +164,8 @@ const stripeCheckout = async (req, res, next) => {
 
 
 const stripeWebHook = async (req, res, next) => {
-  let signinSecret =
-    process.env.WEBHOOK_SECRET;
+  let signinSecret = 
+    process.env.SIGNING_SECRET;
   const payload = req.body;
 
   const sig = req.headers["stripe-signature"];
