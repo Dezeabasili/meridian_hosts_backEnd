@@ -62,7 +62,7 @@ const forgotPassword = async (req, res, next) => {
         // send the generated token to the user's email
        
         // const passwordResetURL = `${req.protocol}://${req.hostname}/resetpassword/${randomToken}/${user._id}`
-        const passwordResetURL = `https://meridianhomes-backend.onrender.com/api/v1/auth/resetpassword/${randomToken}/${user._id}`
+        const passwordResetURL = `${process.env.CLIENT_URL}/resetpassword/${randomToken}/${user._id}`
      
 
 
