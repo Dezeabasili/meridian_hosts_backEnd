@@ -29,7 +29,15 @@ const upload_file = async (req, res, next) => {
         $set: { photos: req.body.urlArray[0] },
       });
 
+    } else if (req.body.fileCode == "roomphoto") {
+
+      await Room.findByIdAndUpdate(req.body.id, {
+        $set: { photos: req.body.urlArray },
+      });
+
     }
+
+    
 
     res.status(200).json("file(s) uploaded successfully");
   } catch (err) {
