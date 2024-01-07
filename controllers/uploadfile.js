@@ -6,6 +6,8 @@ const User = require("./../models/users");
 const createError = require("../utils/error");
 const Hotel = require("../models/hotels");
 const Room = require("../models/rooms");
+const City = require('./../models/cities')
+const HotelType = require('./../models/hotelTypes')
 
 // Everything will change in order to use Cloudinary to store the images
 // The models will also be updated to store the URL's from Cloudinary.
@@ -33,6 +35,18 @@ const upload_file = async (req, res, next) => {
 
       await Room.findByIdAndUpdate(req.body.id, {
         $set: { photos: req.body.urlArray },
+      });
+
+    } else if (req.body.fileCode == "cityphoto") {
+
+      await City.findByIdAndUpdate(req.body.id, {
+        $set: { photo: req.body.urlArray[0] },
+      });
+
+    } else if (req.body.fileCode == "hoteltypephoto") {
+
+      await HotelType.findByIdAndUpdate(req.body.id, {
+        $set: { photo: req.body.urlArray[0] },
       });
 
     }

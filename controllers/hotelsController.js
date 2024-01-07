@@ -3,6 +3,8 @@ const Review = require('../models/reviews')
 const createError = require('../utils/error')
 const Hotel = require('./../models/hotels')
 const Room = require('./../models/rooms')
+const City = require('./../models/cities')
+const HotelType = require('./../models/hotelTypes')
 
 // create hotel
 const createHotel = async (req, res, next) => {
@@ -444,10 +446,62 @@ const getDistances = async (req, res, next) => {
 
 }
 
+// create hotel city
+const createHotelCity = async (req, res, next) => {
+    try {
+        const hotelCity = await City.create(req.body)
+        res.status(201).json({
+            data: hotelCity
+        })
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+// create hotel type
+const createHotelType = async (req, res, next) => {
+    try {
+        const hotelType = await HotelType.create(req.body)
+        res.status(201).json({
+            data: hotelType
+        })
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+// get all hotel cities references
+const getAllHotelCityRefs = async (req, res, next) => {
+    try {
+        const hotelCity = await City.find()
+        res.status(200).json({
+            data: hotelCity
+        })
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+// get all hotel types references
+const getAllHotelTypeRefs = async (req, res, next) => {
+    try {
+        const hotelType = await HotelType.find()
+        res.status(200).json({
+            data: hotelType
+        })
+
+    } catch (err) {
+        next(err)
+    }
+}
+
+
 module.exports = {
     createHotel,
     getAllHotels,
-    // getAllHotels2,
     getHotel,
     updateHotel,
     deleteHotel,
@@ -458,5 +512,9 @@ module.exports = {
     getHotelRooms,
     getHotelStats,
     getHotelsWithin,
-    getDistances
+    getDistances,
+    createHotelCity,
+    createHotelType,
+    getAllHotelCityRefs,
+    getAllHotelTypeRefs
 }
