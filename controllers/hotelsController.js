@@ -257,7 +257,7 @@ const countByCityNew = async (req, res, next) => {
         const countHotelsByCities = await Hotel.aggregate([
             {
                 $group: {
-                    _id: '$city',
+                    _id: '$city.cityName',
                     numberOfHotels: { $sum: 1 }
                 }
             }
@@ -301,7 +301,7 @@ const countByTypeNew = async (req, res, next) => {
         const countHotelsByType = await Hotel.aggregate([
             {
                 $group: {
-                    _id: '$type',
+                    _id: '$type.hotelType',
                     numberOfHotels: { $sum: 1 }
                 }
             }

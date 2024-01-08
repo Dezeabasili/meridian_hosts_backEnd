@@ -12,12 +12,18 @@ const HotelSchema = new Schema(
       lowercase: true,
     },
     type: {
-      type: mongoose.ObjectId,
-        ref: "HotelType",
+      type: String,
+      required: [true, "The type of hotel is required"],
+      lowercase: true,
+      enum: ["cabin", "villa", "mid-rise", "high-rise"],
     },
     city: {
-      type: mongoose.ObjectId,
-        ref: "City",
+      type: String,
+      required: [
+        true,
+        "Please provide the name of the city the hotel is located",
+      ],
+      lowercase: true,
     },
     description: {
       type: String,
@@ -160,9 +166,7 @@ HotelSchema.pre(/^find/, function (next) {
     .populate({
       path: "room_ids",
       select: "title price description",
-    })
-    .populate('city')
-    .populate('HotelType');
+    });
   next();
 });
 
