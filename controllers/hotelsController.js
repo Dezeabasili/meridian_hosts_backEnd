@@ -53,20 +53,41 @@ const getAllHotels = async (req, res, next) => {
     let expressionsArray = []
 
     if (req.query.city) {
-        city.city = req.query.city.toLowerCase()
-        expressionsArray.push(city)
+        try {
+            const hotelCity = await City.findOne({cityName: req.query.city.toLowerCase() })
+            if (!hotelCity)
+          return next(createError("fail", 404, `Sorry we have no property in ${req.query.city}` ));
+          city.city = hotelCity._id;
+          expressionsArray.push(city);
+        } catch (err) {
+            next(err);
+        }
     }
     if (req.body.name) {
         name.name = req.body.name.toLowerCase()
         expressionsArray.push(name)
     } 
     if (req.body.type) {
-        type.type = req.body.type.toLowerCase()
-        expressionsArray.push(type)
+        try {
+            const hotelType = await HotelType.findOne({hotelType: req.body.type.toLowerCase() })
+            if (!hotelType)
+          return next(createError("fail", 404, `Sorry we do not have ${req.query.city} property type` ));
+          type.type = hotelType._id;
+          expressionsArray.push(type);
+        } catch (err) {
+            next(err);
+        }
     } 
     if (req.body.city) {
-        city.city = req.body.city.toLowerCase()
-        expressionsArray.push(city)
+        try {
+            const hotelCity = await City.findOne({cityName: req.body.city.toLowerCase() })
+            if (!hotelCity)
+          return next(createError("fail", 404, `Sorry we have no property in ${req.body.city}` ));
+          city.city = hotelCity._id;
+          expressionsArray.push(city);
+        } catch (err) {
+            next(err);
+        }
     }
 
     if (expressionsArray.length > 0) {
@@ -252,21 +273,38 @@ const countByCity = async (req, res, next) => {
 
 // get hotels by city name
 const countByCityNew = async (req, res, next) => {
-   
+    let cityData = []
     try {
-        const countHotelsByCities = await Hotel.aggregate([
-            {
-                $group: {
-                    _id: '$city.cityName',
-                    numberOfHotels: { $sum: 1 }
-                }
-            }
-        ])
-
-        res.status(201).json({
-            data: countHotelsByCities
-        })
-
+      const countHotelsByCities = await Hotel.aggregate([
+        {
+          $group: {
+            _id: "$city",
+            numberOfHotels: { $sum: 1 },
+          },
+        },
+      ]);
+  
+      const cities = await City.find();
+  
+      
+      countHotelsByCities?.forEach(city => {
+          let cityObj = {}
+          cities?.forEach(cityFromDB => {
+              if (JSON.stringify(city._id) == JSON.stringify(cityFromDB._id)) {
+                  cityObj.cityName = cityFromDB.cityName
+                  cityObj.numberOfHotels = city.numberOfHotels
+                  if (cityFromDB.photo) {
+                      cityObj.photo = cityFromDB.photo
+                  }
+                  
+                  cityData.push(cityObj)
+              }
+          })
+      })
+  
+      res.status(200).json({
+        data: cityData,
+      });
     } catch (err) {
         next(err)
     }
@@ -296,20 +334,38 @@ const countByType = async (req, res, next) => {
 }
 // get hotels by type
 const countByTypeNew = async (req, res, next) => {
-        
-    try {
-        const countHotelsByType = await Hotel.aggregate([
-            {
-                $group: {
-                    _id: '$type.hotelType',
-                    numberOfHotels: { $sum: 1 }
-                }
-            }
-        ])
+    let hotelTypeData = []
+  try {
+    const countHotelsByType = await Hotel.aggregate([
+      {
+        $group: {
+          _id: "$type",
+          numberOfHotels: { $sum: 1 },
+        },
+      },
+    ]);
 
-        res.status(201).json({
-            data: countHotelsByType
+    const hotelTypes = await HotelType.find();
+
+    
+    countHotelsByType?.forEach(hotel => {
+        let typeObj = {}
+        hotelTypes?.forEach(hotelFromDB => {
+            if (JSON.stringify(hotel._id) == JSON.stringify(hotelFromDB._id)) {
+                typeObj.hotelType = hotelFromDB.hotelType
+                typeObj.numberOfHotels = hotel.numberOfHotels
+                if (hotelFromDB.photo) {
+                    typeObj.photo = hotelFromDB.photo
+                }
+                
+                hotelTypeData.push(typeObj)
+            }
         })
+    })
+
+    res.status(200).json({
+      data: hotelTypeData,
+    });
 } catch (err) {
     next(err)
 }

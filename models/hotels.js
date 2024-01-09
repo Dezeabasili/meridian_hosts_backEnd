@@ -162,7 +162,7 @@ HotelSchema.pre(/^find/, function (next) {
       select: "title price description",
     })
     .populate('city')
-    .populate('HotelType');
+    .populate('type');
   next();
 });
 
