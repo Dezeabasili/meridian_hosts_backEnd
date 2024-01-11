@@ -26,6 +26,7 @@ router.get('/allcityrefs', hotelsController.getAllHotelCityRefs)
 router.get('/allhoteltyperefs', hotelsController.getAllHotelTypeRefs)
 router.post('/createcity', hotelsController.createHotelCity)
 router.post('/createhoteltype', hotelsController.createHotelType)
+router.get('/price', hotelsController.getAllHotelsWithinPriceRange)
 
 router.route('/:hotel_id')
     .get(hotelsController.getHotel)

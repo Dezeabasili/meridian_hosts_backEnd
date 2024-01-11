@@ -109,61 +109,46 @@ const getAllHotels = async (req, res, next) => {
         next(err)
     }
 }
-// get all hotels
-const getAllHotels2 = async (req, res, next) => {
-    const minPrice = req.query.min * 1 || 0
-    const maxPrice = req.query.max * 1 || 1000
-    const { min, max, ...others } = req.query
 
-    let queryParams = {}
 
-    queryParams = {
-        ...others,
-        cheapestPrice: {
-            $gte: minPrice,
-            $lte: maxPrice
-        }
+// List hotels within a price range
+const getAllHotelsWithinPriceRange = async (req, res, next) => {
+    const minPrice = req.query.min * 1 || 0;
+    const maxPrice = req.query.max * 1 || 1000;
+    
+  
+    let queryParams = {};
+  
+    queryParams.cheapestPrice = {
+      $gte: minPrice,
+      $lte: maxPrice,
     }
-    // console.log(queryParams)
-
-    // let name = {}
-    // let type = {}
-    // let city = {}
-    // let queryParams = {}
-    // let expressionsArray = []
-
-    // if (req.body.name) {
-    //     name.name = req.body.name.toLowerCase()
-    //     expressionsArray.push(name)
-    // } 
-    // if (req.body.type) {
-    //     type.type = req.body.type.toLowerCase()
-    //     expressionsArray.push(type)
-    // } 
-    // if (req.body.city) {
-    //     city.city = req.body.city.toLowerCase()
-    //     expressionsArray.push(city)
-    // }
-
-    // if (expressionsArray.length > 0) {
-    //     queryParams = { $or: expressionsArray}
-    // }
-
-
+  
+  
+    if (req.query.city) {
+      try {
+          const hotelCity = await City.findOne({cityName: req.query.city.toLowerCase() })
+          if (hotelCity) {
+            queryParams.city  = hotelCity._id;
+          }
+      } catch (err) {
+          next(err);
+      }
+     
+    }
+  
     try {
-        // The explain method in the query below makes this query return detailed execution stats instead of the 
-        // actual query result. This method is useful for determining what index your queries use.
-        // const hotels = await Hotel.find(queryParams).explain()
-        const hotels = await Hotel.find(queryParams)
-        res.status(200).json({
-            number: hotels.length,
-            data: hotels
-        })
-
+      
+      const hotels = await Hotel.find(queryParams);
+      res.status(200).json({
+        number: hotels.length,
+        data: hotels,
+      });
     } catch (err) {
-        next(err)
+      next(err);
     }
-}
+  };
+
 
 // get a specific hotel
 const getHotel = async (req, res, next) => {
@@ -572,5 +557,6 @@ module.exports = {
     createHotelCity,
     createHotelType,
     getAllHotelCityRefs,
-    getAllHotelTypeRefs
+    getAllHotelTypeRefs,
+    getAllHotelsWithinPriceRange
 }
