@@ -65,7 +65,7 @@ const stripeCheckout = async (req, res, next) => {
       "roomNumbers._id": { $in: selectedRooms },
     }).populate({
       path: "hotel",
-      select: "name city",
+      select: "name",
     });
 
     // console.log('roomTypeArray: ', roomTypeArray)
@@ -132,7 +132,7 @@ const stripeCheckout = async (req, res, next) => {
                 description: roomType.title,
                 metadata: {
                   id: roomType._id,
-                  city: roomType.hotel.city,
+                  // city: roomType.hotel.city,
                 },
               },
               unit_amount: roomType.price * 100,
