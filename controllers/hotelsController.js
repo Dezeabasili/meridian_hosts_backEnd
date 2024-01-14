@@ -42,10 +42,17 @@ const getAllHotels = async (req, res, next) => {
       const hotelCity = await City.findOne({
         cityName: req.query.city.toLowerCase(),
       });
-      if (hotelCity) {
-        city.city = hotelCity._id;
-        expressionsArray.push(city);
+      if (!hotelCity) {
+        return next(
+          createError(
+            "fail",
+            404,
+            `Sorry, we have no property in ${req.query.city}`
+          )
+        );
       }
+      city.city = hotelCity._id;
+      expressionsArray.push(city);
     } catch (err) {
       next(err);
     }
@@ -59,10 +66,17 @@ const getAllHotels = async (req, res, next) => {
       const hotelType = await HotelType.findOne({
         hotelType: req.body.type.toLowerCase(),
       });
-      if (hotelType) {
-        type.type = hotelType._id;
-        expressionsArray.push(type);
+      if (!hotelType) {
+        return next(
+          createError(
+            "fail",
+            404,
+            `Sorry we do not have ${req.query.city} property type`
+          )
+        );
       }
+      type.type = hotelType._id;
+      expressionsArray.push(type);
     } catch (err) {
       next(err);
     }
@@ -72,10 +86,17 @@ const getAllHotels = async (req, res, next) => {
       const hotelCity = await City.findOne({
         cityName: req.body.city.toLowerCase(),
       });
-      if (hotelCity) {
-        city.city = hotelCity._id;
-        expressionsArray.push(city);
+      if (!hotelCity) {
+        return next(
+          createError(
+            "fail",
+            404,
+            `Sorry we have no property in ${req.body.city}`
+          )
+        );
       }
+      city.city = hotelCity._id;
+      expressionsArray.push(city);
     } catch (err) {
       next(err);
     }
@@ -116,9 +137,16 @@ const getAllHotelsWithinPriceRange = async (req, res, next) => {
       const hotelCity = await City.findOne({
         cityName: req.query.city.toLowerCase(),
       });
-      if (hotelCity) {
-        queryParams.city = hotelCity._id;
+      if (!hotelCity) {
+        return next(
+          createError(
+            "fail",
+            404,
+            `Sorry we have no property in ${req.query.city}`
+          )
+        );
       }
+      queryParams.city = hotelCity._id;
     } catch (err) {
       next(err);
     }
