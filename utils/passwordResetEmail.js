@@ -23,7 +23,7 @@ const passwordResetMail = async (person, passwordReset) => {
         const msg = {
             to: [
                 {
-                    email: "ezeabasili@yahoo.co.uk",
+                    email: person.email,
                     name: person.name
                 }
             ],
