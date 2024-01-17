@@ -57,50 +57,17 @@ const getAllHotels = async (req, res, next) => {
       next(err);
     }
   }
-  if (req.body.name) {
-    name.name = req.body.name.toLowerCase();
-    expressionsArray.push(name);
+  // if (req.body.name) {
+  //   name.name = req.body.name.toLowerCase();
+  //   expressionsArray.push(name);
+  // }
+
+  if (req.query.cityref) {
+    city.city = req.query.cityref
+    expressionsArray.push({city: req.query.cityref});
+    console.log('city: ', city)
   }
-  if (req.body.type) {
-    try {
-      const hotelType = await HotelType.findOne({
-        hotelType: req.body.type.toLowerCase(),
-      });
-      if (!hotelType) {
-        return next(
-          createError(
-            "fail",
-            404,
-            `Sorry we do not have ${req.query.city} property type`
-          )
-        );
-      }
-      type.type = hotelType._id;
-      expressionsArray.push(type);
-    } catch (err) {
-      next(err);
-    }
-  }
-  if (req.body.city) {
-    try {
-      const hotelCity = await City.findOne({
-        cityName: req.body.city.toLowerCase(),
-      });
-      if (!hotelCity) {
-        return next(
-          createError(
-            "fail",
-            404,
-            `Sorry we have no property in ${req.body.city}`
-          )
-        );
-      }
-      city.city = hotelCity._id;
-      expressionsArray.push(city);
-    } catch (err) {
-      next(err);
-    }
-  }
+  
 
   if (expressionsArray.length > 0) {
     queryParams = { $or: expressionsArray };

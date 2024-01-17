@@ -11,13 +11,13 @@ const getAllReviews = async (req, res, next) => {
     // a particular hotel. If filterObject is empty, then we get all the reviews for all the hotels
     let filterObject = {};
     if (req.params.hotel_id) filterObject.hotel = req.params.hotel_id;
-    if (req.body.review_id) filterObject._id = req.body.review_id;
-    if (req.body.email) {
-      const user = await User.findOne({ email: req.body.email });
-      if (!user)
-        return next(createError("fail", 404, "This user does not exist"));
-      filterObject.customer = user._id;
-    }
+    if (req.query.review_id) filterObject._id = req.query.review_id;
+    // if (req.body.email) {
+    //   const user = await User.findOne({ email: req.body.email });
+    //   if (!user)
+    //     return next(createError("fail", 404, "This user does not exist"));
+    //   filterObject.customer = user._id;
+    // }
 
     const reviews = await Review.find(filterObject)
       .populate({ path: "hotel", select: "name" })
