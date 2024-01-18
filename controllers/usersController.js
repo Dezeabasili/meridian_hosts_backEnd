@@ -7,6 +7,7 @@ const User = require("./../models/users");
 const Booking = require("./../models/bookings");
 const Hotel = require("./../models/hotels");
 const Review = require("./../models/reviews");
+const sendOutMail = require('../utils/handleSubscriptionEmail')
 
 // get all users
 const getAllUsers = async (req, res, next) => {
@@ -246,6 +247,24 @@ const seeMyPhoto = async (req, res, next) => {
   }
 };
 
+
+const handleSubscription = async (req, res, next) => {
+  try {
+    //get user with the submitted email
+    const user = await User.findOne({email: (req.body.email).toLowerCase()});
+    if (!user)
+      return next(createError("fail", 404, "This user does not exist"));
+
+    user.password = undefined
+
+    await sendOutMail(user)
+
+    res.status(200).json('Thank you for subscribing to our news letters');
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUser,
@@ -257,4 +276,5 @@ module.exports = {
   deleteMyAccount,
   seeMyAccount,
   seeMyPhoto,
+  handleSubscription
 };

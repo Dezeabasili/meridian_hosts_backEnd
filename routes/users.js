@@ -28,6 +28,8 @@ router.get('/myaccount', verifyAccessToken, usersController.seeMyAccount)
 
 router.get('/myaccount/myphoto', verifyAccessToken, usersController.seeMyPhoto)
 
+router.post('/subscriptions', usersController.handleSubscription)
+
 
 
 router.route('/:user_id')
