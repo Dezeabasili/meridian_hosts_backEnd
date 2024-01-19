@@ -10,7 +10,8 @@ const verifyRoles = (...authorizedRoles) => {
         const approvedRoles = [...authorizedRoles]
 
         // check if any of user's assigned roles is included in the approved roles
-        const result = assignedRoles.some((role) => approvedRoles.includes(role))
+        // const result = assignedRoles.some((role) => approvedRoles.includes(role))
+        const result = approvedRoles.includes(assignedRoles)
 
         if (!result) return next(createError('fail', 401, 'You are not authorized to view this page'))
         next()

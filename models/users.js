@@ -33,16 +33,12 @@ const UserSchema = new mongoose.Schema({
         type: Date
     },
     roles: {
-        type: [Number],
-        default: 2010,
-        enum: {
-            values: [2010, 2020, 2030],
-            message: 'Values can only be 2010, 2020 or 2030'
-        }
+        type: Number,
+        default: 2010
     },
     photo: {
         type: String,
-        default: 'default_profile_pic.png',
+        default: 'https://res.cloudinary.com/dmth3elzl/image/upload/v1705633392/profilephotos/edeo8b4vzeppeovxny9c.png',
         lowercase: true
     },
     active: {

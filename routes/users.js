@@ -20,7 +20,7 @@ router.patch('/changepassword', verifyAccessToken, authController.changePassword
 
 router.patch('/updatemyaccount', verifyAccessToken, usersController.updateMyAccount)
 
-router.patch('/updateuser', verifyAccessToken, usersController.updateUser)
+router.patch('/updateuser', verifyAccessToken, verifyRoles(2030), usersController.updateUser)
 
 router.delete('/deletemyaccount', verifyAccessToken, usersController.deleteMyAccount)
 

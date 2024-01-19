@@ -52,24 +52,38 @@ const findUser = async (req, res, next) => {
 
 // update a specific user
 const updateUser = async (req, res, next) => {
-
   try {
-
-    let Obj = {}
+    let Obj = {};
     if (req.body.roles) {
-      Obj.roles = req.body.roles * 1
+      if (
+        req.body.roles * 1 != 2010 &&
+        req.body.roles * 1 != 2020 &&
+        req.body.roles * 1 != 2030
+      )
+        return next(
+          createError("fail", 404, "user's role can only be 2010, 2020 or 2030")
+        );
+
+      Obj.roles = req.body.roles * 1;
     }
-    if (req.body.active.toLowerCase() === 'yes') { 
-      Obj.active = true
+
+    if (req.body.active) {
+      if (req.body.active.toLowerCase() === "yes") {
+        Obj.active = true;
+      } else if (req.body.active.toLowerCase() === "no") {
+        Obj.active = false;
+      }
     }
+    
 
     const user = await User.updateOne(
-      {email: req.body.email},
-      { $set: Obj },
-      { new: true}
+      { email: req.body.email },
+      { $set: Obj }
     );
-    if (!user)
-      return next(createError("fail", 404, "this user does not exist"));
+    console.log('user: ', user)
+    if (user.matchedCount === 0)
+      return next(createError("fail", 404, "This user does not exist"));
+    
     res.status(200).json({
       data: user,
     });
