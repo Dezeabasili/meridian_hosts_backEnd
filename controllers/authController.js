@@ -31,10 +31,12 @@ const login = async (req, res, next) => {
         res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
         const assignedRoles = user.roles
+        const profilePhoto = user.photo
 
         res.status(200).json({
             accessToken,
-            assignedRoles
+            assignedRoles,
+            profilePhoto
         })
 
     } catch (err) {
