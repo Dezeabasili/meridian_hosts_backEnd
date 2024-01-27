@@ -28,6 +28,8 @@ router.get('/myaccount', verifyAccessToken, usersController.seeMyAccount)
 
 router.get('/myaccount/myphoto', verifyAccessToken, usersController.seeMyPhoto)
 
+router.delete('/myaccount/deletemyphoto', verifyAccessToken, usersController.deleteMyPhoto)
+
 router.post('/subscriptions', usersController.handleSubscription)
 
 

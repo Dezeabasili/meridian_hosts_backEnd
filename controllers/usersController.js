@@ -261,6 +261,24 @@ const seeMyPhoto = async (req, res, next) => {
   }
 };
 
+// the request handler below is for deleting the user's profile photo
+const deleteMyPhoto = async (req, res, next) => {
+  try {
+    // get user with the user id
+    const loggedInUser = await User.findById(req.userInfo.id);
+    if (!loggedInUser)
+      return next(createError("fail", 404, "This user no longer exists"));
+      
+      loggedInUser.photo = 'https://res.cloudinary.com/dmth3elzl/image/upload/v1705633392/profilephotos/edeo8b4vzeppeovxny9c.png'
+      await loggedInUser.save()
+      return res.status(204).json("profile photo changed successfully")
+   
+  } catch (err) {
+    next(err);
+  }
+};
+
+
 
 const handleSubscription = async (req, res, next) => {
   try {
@@ -290,5 +308,6 @@ module.exports = {
   deleteMyAccount,
   seeMyAccount,
   seeMyPhoto,
+  deleteMyPhoto,
   handleSubscription
 };
