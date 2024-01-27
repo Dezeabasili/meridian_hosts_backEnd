@@ -6,13 +6,13 @@ const verifyAccessToken = require('./../middlewares/verifyJWT')
 const verifyRoles = require('./../middlewares/verifyRoles')
 
 router.route('/')
-    .get(usersController.getAllUsers)
+    .get(verifyAccessToken, verifyRoles(2030), usersController.getAllUsers)
 
 router.get('/usercategories', usersController.usersByCategories)
 
 router.post('/forgotpassword', authController.forgotPassword)
 
-router.post('/finduser', usersController.findUser)
+router.post('/finduser', verifyAccessToken, verifyRoles(2030), usersController.findUser)
 
 router.patch('/resetpassword/:token/:id', authController.resetPassword)
 

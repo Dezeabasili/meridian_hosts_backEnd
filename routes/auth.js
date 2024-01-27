@@ -17,10 +17,8 @@ router.get('/logout', logout)
 router.post('/upload', verifyAccessToken, fileUpload({ createParentPath: true }), upload_file)
 router.post('/generatesignature', verifyAccessToken, generateSignature)
 router.post('/forgotpassword', authController.forgotPassword)
-
 router.post('/changepassword',verifyAccessToken, authController.changePassword)
 router.post('/resetpassword/:resettoken/:user_id', authController.resetPassword)
 
-// , useTempFiles: true, tempFileDir: '/tmp/'
 
 module.exports = router
