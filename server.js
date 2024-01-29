@@ -62,7 +62,7 @@ app.use(cookieParser());
 
 app.use((req, res, next) => {
   if (req.originalUrl === "/api/v1/stripe/stripe-webhook") {
-    console.log("req.originalUrl: ", req.originalUrl);
+    // console.log("req.originalUrl: ", req.originalUrl);
     next();
   } else {
     express.json()(req, res, next);
@@ -108,38 +108,7 @@ app.use("/api/v1/rooms", roomsRouter);
 app.use("/api/v1/reviews", reviewsRouter);
 app.use("/api/v1/stripe", stripeRouter);
 app.use("/api/v1/bookings", bookingsRouter);
-app.use("/api/v1/pictures", picturesRouter);
-
-// app.post('/hooks', express.raw({type: 'application/json'}), async (req, res) => {
-//     let signinSecret = "whsec_855119b96a4df9440f13897a880d6bfd37170ee714729d5bf3f441666ba1fba0"
-//     const payload = req.body
-
-//     const sig = req.headers['stripe-signature'];
-
-//     let event
-//   try {
-//     event = stripe.webhooks.constructEvent(payload, sig, signinSecret);
-//   }
-//   catch (err) {
-//     console.log(err.message)
-//     return res.status(400).send(`Webhook Error: ${err.message}`);
-//   }
-
-// if (event.type === 'checkout.session.completed') {
-
-//     const customer = await stripe.customers.retrieve(
-//         event.data.object.customer
-//       );
-
-//     console.log(customer)
-//     // console.log(event.data.object.customer)
-
-// }
-
-// //   console.log(event.type)
-// //   console.log(event.data.object)
-//   return res.json({received: true});
-// })
+// app.use("/api/v1/pictures", picturesRouter);
 
 app.all("*", (req, res, next) => {
   next(createError("fail", 404, `cannot find ${req.originalUrl}`));

@@ -9,9 +9,6 @@ cloudinary.config({
     secure: true
 })
 
-// Everything will change in order to use Cloudinary to store the images
-// The models will also be updated to store the URL's from Cloudinary.
-// This is to allow the user to upload files.
 const generateSignature = async (req, res, next) => {
   
     const folder = req.body.folder

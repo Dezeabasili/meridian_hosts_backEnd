@@ -89,7 +89,7 @@ const updateReview = async (req, res, next) => {
       { new: true }
     );
     if (!updatedReview)
-      return next(createError("fail", 404, "This review no longer exists"));
+      return next(createError("fail", 404, "This review no longer exist"));
     res.status(201).json({
       status: "success",
       data: updatedReview,

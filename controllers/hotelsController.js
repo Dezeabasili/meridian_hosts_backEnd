@@ -57,10 +57,6 @@ const getAllHotels = async (req, res, next) => {
       next(err);
     }
   }
-  // if (req.body.name) {
-  //   name.name = req.body.name.toLowerCase();
-  //   expressionsArray.push(name);
-  // }
 
   if (req.query.cityref) {
     city.city = req.query.cityref
@@ -68,7 +64,6 @@ const getAllHotels = async (req, res, next) => {
     console.log('city: ', city)
   }
   
-
   if (expressionsArray.length > 0) {
     queryParams = { $or: expressionsArray };
   }
@@ -193,6 +188,7 @@ const updateHotel = async (req, res, next) => {
   }
 };
 
+
 // delete a specific hotel
 const deleteHotel = async (req, res, next) => {
   try {
@@ -206,6 +202,16 @@ const deleteHotel = async (req, res, next) => {
     const bookings = await Booking.deleteMany({ hotel: hotel._id });
     // delete the reviews for this hotel
     const reviews = await Review.deleteMany({ hotel: hotel._id });
+    // check if there is any hotel left in the city 
+    const numberOfHotelsInCity = await Hotel.find({city: hotel.city})
+    if (numberOfHotelsInCity.length == 0) {
+      await City.findByIdAndDelete(hotel.city)
+    }
+    // check if there is any hotel of the same type left
+    const numberOfHotelType = await Hotel.find({type: hotel.type})
+    if (numberOfHotelType.length == 0) {
+      await HotelType.findByIdAndDelete(hotel.type)
+    }
     // console.log('rooms deleted: ', result)
     res.status(204).json("Hotel has been deleted");
   } catch (err) {
@@ -214,22 +220,22 @@ const deleteHotel = async (req, res, next) => {
 };
 
 // get hotels by city name
-const countByCity = async (req, res, next) => {
-  const citiesString = req.query.cities;
-  const citiesArray = citiesString.split(",");
-  try {
-    const promiseList = citiesArray.map((city) => {
-      return Hotel.countDocuments({ city });
-    });
-    const countList = await Promise.all(promiseList);
+// const countByCity = async (req, res, next) => {
+//   const citiesString = req.query.cities;
+//   const citiesArray = citiesString.split(",");
+//   try {
+//     const promiseList = citiesArray.map((city) => {
+//       return Hotel.countDocuments({ city });
+//     });
+//     const countList = await Promise.all(promiseList);
 
-    res.status(201).json({
-      data: countList,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+//     res.status(201).json({
+//       data: countList,
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
 // get hotels by city name
 const countByCityNew = async (req, res, next) => {
@@ -270,25 +276,26 @@ const countByCityNew = async (req, res, next) => {
 };
 
 // get hotels by type
-const countByType = async (req, res, next) => {
-  try {
-    const hotelCount = await Hotel.countDocuments({ type: "Hotel" });
-    const apartmentCount = await Hotel.countDocuments({ type: "Apartment" });
-    const resortCount = await Hotel.countDocuments({ type: "Resort" });
-    const villaCount = await Hotel.countDocuments({ type: "Villa" });
-    const cabinCount = await Hotel.countDocuments({ type: "Cabin" });
+// const countByType = async (req, res, next) => {
+//   try {
+//     const hotelCount = await Hotel.countDocuments({ type: "Hotel" });
+//     const apartmentCount = await Hotel.countDocuments({ type: "Apartment" });
+//     const resortCount = await Hotel.countDocuments({ type: "Resort" });
+//     const villaCount = await Hotel.countDocuments({ type: "Villa" });
+//     const cabinCount = await Hotel.countDocuments({ type: "Cabin" });
 
-    res.status(201).json([
-      { type: "Hotel", count: hotelCount },
-      { type: "Apartment", count: apartmentCount },
-      { type: "Resort", count: resortCount },
-      { type: "Villa", count: villaCount },
-      { type: "Cabin", count: cabinCount },
-    ]);
-  } catch (err) {
-    next(err);
-  }
-};
+//     res.status(201).json([
+//       { type: "Hotel", count: hotelCount },
+//       { type: "Apartment", count: apartmentCount },
+//       { type: "Resort", count: resortCount },
+//       { type: "Villa", count: villaCount },
+//       { type: "Cabin", count: cabinCount },
+//     ]);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 // get hotels by type
 const countByTypeNew = async (req, res, next) => {
   let hotelTypeData = [];
@@ -522,9 +529,7 @@ module.exports = {
   getHotel,
   updateHotel,
   deleteHotel,
-  countByCity,
   countByCityNew,
-  countByType,
   countByTypeNew,
   getHotelRooms,
   getHotelStats,
