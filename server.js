@@ -24,7 +24,6 @@ const roomsRouter = require("./routes/rooms");
 const reviewsRouter = require("./routes/reviews");
 const stripeRouter = require("./routes/stripe");
 const bookingsRouter = require("./routes/bookings");
-const picturesRouter = require("./routes/pictures");
 const createError = require("./utils/error");
 const app = express();
 const PORT = process.env.PORT || 4000
