@@ -5,7 +5,11 @@ const createError = require('../utils/error')
 
 const getAllBookings = async (req, res, next) => {
     try {
-        const bookings = await Booking.find()
+        let queryObj = {}
+        if (req.query.hotel_id) {
+            queryObj.hotel = req.query.hotel_id
+        }
+        const bookings = await Booking.find(queryObj)
         if (!bookings) return next(createError('fail', 404, 'this user has no bookings'))
 
         res.status(200).json({

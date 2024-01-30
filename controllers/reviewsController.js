@@ -57,17 +57,14 @@ const createReview = async (req, res, next) => {
     const booking = await Booking.findById(req.body.bookingRef)
     if (!booking)
         return next(createError("fail", 404, "This booking reference does not exist"));
-    if (!req.params.hotel_id) {
-      const hotel = await Hotel.findOne({ name: req.body.hotel });
-      if (!hotel)
-        return next(createError("fail", 404, "This hotel does not exist"));
-      req.body.hotel = hotel._id;
-      console.log("req.body.hotel: ", req.body.hotel);
-    } else {
-      req.body.hotel = req.params.hotel_id;
-    }
-    // retrieve the logged-in user id from req.userInfo.id
+
+    // check if the customer is the one writing the review
+    if (JSON.stringify(booking.user._id) != JSON.stringify(req.userInfo.id)) {
+      return next(createError("fail", 400, "You are not the customer who made the reservation"));
+    }    
+
     req.body.customer = req.userInfo.id;
+    req.body.hotel = booking.hotel._id;
     console.log("req.body.customer: ", req.body.customer);
     const newReview = await Review.create(req.body);
 
@@ -79,6 +76,7 @@ const createReview = async (req, res, next) => {
     next(err);
   }
 };
+
 
 // update a review
 const updateReview = async (req, res, next) => {

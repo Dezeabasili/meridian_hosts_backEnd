@@ -31,8 +31,6 @@ const getAllHotels = async (req, res, next) => {
     limit = req.query.limit;
   }
 
-  let name = {};
-  let type = {};
   let city = {};
   let queryParams = {};
   let expressionsArray = [];
