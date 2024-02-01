@@ -3,6 +3,8 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Room = require("./../models/rooms");
 const Booking = require("./../models/bookings");
 const createError = require("../utils/error");
+const User = require('./../models/users')
+const sendOutMail = require('../utils/handleEmail3')
 
 const updateRoomAvailability = async (room_id, reservedDates) => {
   // console.log(req.body.reservedDates)
@@ -198,8 +200,10 @@ const stripeWebHook = async (req, res, next) => {
       // console.log('newBooking: ', newBooking)
 
       const confirmedBooking = await Booking.create({ ...newBooking });
+      const customerDetails = await User.findById(user_id)
 
       console.log("confirmedBooking: ", confirmedBooking);
+      await sendOutMail(customerDetails, confirmedBooking)
 
       selectedRooms.forEach(async (room_id) => {
         await updateRoomAvailability(room_id, reservedDates);
