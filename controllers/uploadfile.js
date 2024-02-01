@@ -9,9 +9,6 @@ const Room = require("../models/rooms");
 const City = require('./../models/cities')
 const HotelType = require('./../models/hotelTypes')
 
-// Everything will change in order to use Cloudinary to store the images
-// The models will also be updated to store the URL's from Cloudinary.
-// This is to allow the user to upload files.
 const upload_file = async (req, res, next) => {
   try {
     // get the user
@@ -50,8 +47,6 @@ const upload_file = async (req, res, next) => {
       });
 
     }
-
-    
 
     res.status(200).json("file(s) uploaded successfully");
   } catch (err) {

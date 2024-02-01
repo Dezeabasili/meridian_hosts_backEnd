@@ -15,7 +15,6 @@ const updateRoomAvailability = async (room_id, reservedDates) => {
     const roomStyle = await Room.findOne({ "roomNumbers._id": room_id });
     // console.log(roomStyle)
     // get the room to update
-    // console.log(roomStyle.roomNumbers[0]?._id)
     const room = roomStyle.roomNumbers.find(({ _id }) => _id == room_id);
     // console.log(room)
 
@@ -26,7 +25,6 @@ const updateRoomAvailability = async (room_id, reservedDates) => {
       unavailableDates.sort(compareNumbers);
     }
 
-    // room.unavailableDates = [...unavailableDates]
     roomStyle.roomNumbers = roomStyle.roomNumbers.map((roomNumber) => {
       if (roomNumber._id == room_id) {
         return {
@@ -47,14 +45,12 @@ const updateRoomAvailability = async (room_id, reservedDates) => {
       }
     );
 
-    // save the updated room
-    // await roomStyle.save();
   } catch (err) {
     console.log(err);
   }
 };
 
-// app.post('/create-checkout-session', async (req, res) => {
+
 const stripeCheckout = async (req, res, next) => {
   const { selectedRooms, reservedDates, hotel_id } = req.body;
 
@@ -67,44 +63,6 @@ const stripeCheckout = async (req, res, next) => {
       path: "hotel",
       select: "name",
     });
-
-    // console.log('roomTypeArray: ', roomTypeArray)
-
-    // const promiseList = selectedRooms.map((roomId) => {
-    //     return Room.findOne({"roomNumbers._id": roomId}).populate({
-    //         path: 'hotel',
-    //         select: 'name city'
-    //     })
-    // })
-    // const roomTypeArray = await Promise.all(promiseList)
-
-    // console.log(roomTypeArray)
-
-    // let bookingsArray = []
-
-    // selectedRooms.forEach(selectedRoom => {
-    //   roomTypeArray.forEach(roomType => {
-    //     roomType.roomNumbers.forEach(roomNumber => {
-    //       if (roomNumber._id == selectedRoom) {
-    //         let roomDetails = {}
-    //         // roomDetails.roomSytleId = roomType._id
-    //         roomDetails.hotelName = roomType.hotel.name
-    //         roomDetails.city = roomType.hotel.city
-    //         roomDetails.roomNumber = roomNumber.number
-    //         roomDetails.checkin_date = checkin_date
-    //         roomDetails.checkout_date = checkout_date
-    //         roomDetails.price_per_night = roomType.price
-    //         roomDetails.number_of_nights = numberOfNights
-    //         roomDetails.room_type = roomType.title
-
-    //         bookingsArray.push(roomDetails)
-    //       }
-    //     })
-    //   })
-    // })
-
-    // // console.log('roomDeatails :', roomDetails)
-    // console.log('bookingsArray :', bookingsArray)
 
     // create customer
     const customer = await stripe.customers.create({
@@ -161,8 +119,6 @@ const stripeCheckout = async (req, res, next) => {
 };
 
 
-
-
 const stripeWebHook = async (req, res, next) => {
   let signinSecret = 
     process.env.SIGNING_SECRET;
@@ -179,45 +135,6 @@ const stripeWebHook = async (req, res, next) => {
   }
 
   try {
-    //   // console.log('event.data: ', event.data)
-    //   console.log('event.type: ', event.type)
-
-    // const customer = await stripe.customers.retrieve(
-    //   event.data.object.customer
-    // );
-
-    // // console.log('customer: ', customer)
-
-    // const selectedRooms = JSON.parse(customer.metadata.selectedRooms)
-    // const reservedDates = JSON.parse(customer.metadata.reservedDates)
-    // const user_id = customer.metadata.userId
-    // const hotel_id = customer.metadata.hotel_id
-
-    // const checkin_date = reservedDates[0]
-    // const lastNight = reservedDates[reservedDates.length - 1]
-
-    // const dateObj = new Date(lastNight)
-    // dateObj.setDate(dateObj.getDate() + 1)
-    // const checkout_date = dateObj
-    // console.log('Check out date: ', dateObj)
-    // console.log('Check in date: ', checkin_date)
-    // console.log('last night: ', lastNight)
-
-    //   // get room information
-
-    //     const numberOfNights = reservedDates.length
-    //     const promiseList = selectedRooms.map((roomId) => {
-    //         return Room.findOne({"roomNumbers._id": roomId}).populate({
-    //             path: 'hotel',
-    //             select: 'name city'
-    //         })
-    //     })
-    //     const roomTypeArray = await Promise.all(promiseList)
-
-    //     console.log('roomTypeArray: ', roomTypeArray)
-
-    //     // console.log('bookingsArray :', bookingsArray)
-
     if (event.type === "checkout.session.completed") {
       console.log("inside webhook");
 
@@ -245,13 +162,6 @@ const stripeWebHook = async (req, res, next) => {
       // get room information
 
       const numberOfNights = reservedDates.length;
-      // const promiseList = selectedRooms.map((roomId) => {
-      //   return Room.findOne({ "roomNumbers._id": roomId }).populate({
-      //     path: "hotel",
-      //     select: "name city",
-      //   });
-      // });
-      // const roomTypeArray = await Promise.all(promiseList);
 
       const roomTypeArray = await Room.find({
         "roomNumbers._id": { $in: selectedRooms },
@@ -263,16 +173,13 @@ const stripeWebHook = async (req, res, next) => {
       newBooking.user = user_id;
       newBooking.hotel = hotel_id;
       newBooking.bookingDetails = [];
-      // let bookingsArray = []
 
       selectedRooms.forEach((selectedRoom, index1) => {
         roomTypeArray.forEach((roomType, index2) => {
           roomType.roomNumbers.forEach((roomNumber, index3) => {
             if (roomNumber._id == selectedRoom) {
               let roomDetails = {};
-              // console.log('index1: ', index1)
-              // console.log('index2: ', index2)
-              // console.log('index3: ', index3)
+
               roomDetails.roomType_id = roomType._id;
               roomDetails.room_id = selectedRoom;
               roomDetails.roomNumber = roomNumber.number;

@@ -7,19 +7,16 @@ const Booking = require("./../models/bookings");
 const createRoom = async (req, res, next) => {
   try {
     // check if the hotel exist
-    const hotelExists = await Hotel.findOne({ name: req.body.hotel });
+    const hotelExists = await Hotel.findById(req.body.hotel);
     if (!hotelExists)
       return next(
         createError("fail", 404, "the hotel you specified does not exist")
       );
-    req.body.hotel = hotelExists._id;
 
     const room = await Room.create(req.body);
     const hotel = await Hotel.findByIdAndUpdate(req.body.hotel, {
       $push: { room_ids: room._id },
     });
-    // if (!hotel) return next(createError('fail', 404, 'the hotel you specified does not exist'))
-
 
     res.status(201).json({
       success: true,
@@ -37,7 +34,7 @@ const updateRoom = async (req, res, next) => {
     let bookings;
     if (req.body.hotel) {
       // Check if the given hotel exists
-      const hotelNew = await Hotel.findOne({ name: req.body.hotel });
+      const hotelNew = await Hotel.findById(req.body.hotel);
       if (!hotelNew)
         return next(
           createError("fail", 404, "the hotel you specified does not exist")
@@ -63,7 +60,6 @@ const updateRoom = async (req, res, next) => {
       });
 
       // set all the unavailable dates to empty arrays
-    //   const updatedRoomTitle = await Room.findById(req.params.room_id)
       updatedRoomTitle.roomNumbers = updatedRoomTitle.roomNumbers.map(roomNumber => (
         {...roomNumber, unavailableDates: []}
       ))
@@ -74,11 +70,7 @@ const updateRoom = async (req, res, next) => {
       bookings = await Booking.deleteMany({
         "bookingDetails.roomType_id": req.params.room_id,
       });
-    //   if (!bookings)
-    //     return next(
-    //       createError("fail", 404, "the booking you specified does not exist")
-    //     );
-    //   console.log("bookings: ", bookings);
+
     } else if (req.body.removeRooms) {
         const roomsArray = (req.body.removeRooms).split(',')
         let trimmedRooms = roomsArray.map(room => (room.trim() * 1))
@@ -87,19 +79,11 @@ const updateRoom = async (req, res, next) => {
         console.log('updatedRoomTitle: ', updatedRoomTitle)
         updatedRoomTitle = await updatedRoomTitle.save()
 
-        // continue tomorrow
         // delete the bookings associated with these rooms
         bookings = await Booking.deleteMany({
             "bookingDetails.roomType_id": req.params.room_id, "bookingDetails.roomNumber": {$in : trimmedRooms}
           });
-        //   if (!bookings)
-        //     return next(
-        //       createError("fail", 404, "the booking you specified does not exist")
-        //     );
-        //   console.log("bookings: ", bookings);
-
     }
-
 
     let roomNumbers = [];
     if (req.body.addRooms) {
@@ -134,21 +118,6 @@ const updateRoom = async (req, res, next) => {
   
 };
 
-// const updateRoomAvailability = async (req, res, next) => {
-//     try {
-//         await Room.updateOne(
-//             { "roomNumbers._id": req.params.id },
-//             {
-//                 $push: {
-//                     "roomNumbers.$.unavailableDates": req.body.dates
-//                 },
-//             }
-//         );
-//         res.status(200).json("Room status has been updated.");
-//     } catch (err) {
-//         next(err);
-//     }
-// };
 
 const updateRoomAvailability = async (req, res, next) => {
   // console.log(req.body.reservedDates)
@@ -163,7 +132,6 @@ const updateRoomAvailability = async (req, res, next) => {
     });
     // console.log(roomStyle)
     // get the room to update
-    // console.log(roomStyle.roomNumbers[0]?._id)
     const room = roomStyle.roomNumbers.find(
       ({ _id }) => _id == req.params.room_id
     );
