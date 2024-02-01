@@ -38,7 +38,7 @@ const sendOutMail = async (newUser, booking) => {
             templateId: "d-3ee0ba0d11024ea7987d8db8d188e200",
             dynamicTemplateData: {
                 name: newUser.name,
-                booking: booking
+                confirmedBooking: booking
             }
         }
 
