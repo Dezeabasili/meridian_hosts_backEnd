@@ -7,6 +7,15 @@ const createError = require("../utils/error");
 const User = require('./../models/users')
 const sendOutMail = require('../utils/handleEmail3')
 
+// function to format date
+const formatDate = (value) => {
+  let date = new Date(value);
+  const day = date.toLocaleString('default', { day: '2-digit' });
+  const month = date.toLocaleString('default', { month: 'short' });
+  const year = date.toLocaleString('default', { year: 'numeric' });
+  return day + '-' + month + '-' + year;
+}
+
 const updateRoomAvailability = async (room_id, reservedDates) => {
   // console.log(req.body.reservedDates)
 
@@ -208,14 +217,14 @@ const stripeWebHook = async (req, res, next) => {
       htmlReceipt = htmlReceipt + `<p>Booking reference: ${confirmedBooking._id}</p><br/>`
       htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Customer name: ${customerDetails.name}</p><br/>`
       htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Hotel name: ${hotelDetails.name}</p><br/>`
-      htmlReceipt = htmlReceipt + `<p>Booking date: ${confirmedBooking.createdAt}</p><br/>`
+      htmlReceipt = htmlReceipt + `<p>Booking date: ${formatDate(confirmedBooking.createdAt)}</p><br/>`
       confirmedBooking.bookingDetails.forEach(detail => {
         htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Room type: ${detail.room_type}</p><br/>`
         htmlReceipt = htmlReceipt + `<p>Price per night: $${detail.price_per_night}</p><br/>`
-        htmlReceipt = htmlReceipt + `<p>Room number: $${detail.roomNumber}</p><br/>`
-        htmlReceipt = htmlReceipt + `<p>Check-in date: $${detail.checkin_date}</p><br/>`
-        htmlReceipt = htmlReceipt + `<p>Check-out date: $${detail.checkout_date}</p><br/>`
-        htmlReceipt = htmlReceipt + `<p>Number of nights: $${detail.number_of_nights}</p><br/>`
+        htmlReceipt = htmlReceipt + `<p>Room number: ${detail.roomNumber}</p><br/>`
+        htmlReceipt = htmlReceipt + `<p>Check-in date: ${formatDate(detail.checkin_date)}</p><br/>`
+        htmlReceipt = htmlReceipt + `<p>Check-out date: ${formatDate(detail.checkout_date)}</p><br/>`
+        htmlReceipt = htmlReceipt + `<p>Number of nights: ${detail.number_of_nights}</p><br/>`
       })
      
 
