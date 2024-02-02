@@ -214,16 +214,15 @@ const stripeWebHook = async (req, res, next) => {
       const hotelDetails = await Hotel.findById(hotel_id)
 
       let htmlReceipt = ''
-      htmlReceipt = htmlReceipt + `<p>Booking reference: ${confirmedBooking._id}</p><br/>`
-      htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Customer name: ${customerDetails.name}</p><br/>`
-      htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Hotel name: ${hotelDetails.name}</p><br/>`
-      htmlReceipt = htmlReceipt + `<p>Booking date: ${formatDate(confirmedBooking.createdAt)}</p><br/>`
+      htmlReceipt = htmlReceipt + `<p>Booking reference: ${confirmedBooking._id}</p>`
+      htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Customer name: ${customerDetails.name}</p>`
+      htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Hotel name: <strong>${hotelDetails.name}</strong></p>`
       confirmedBooking.bookingDetails.forEach(detail => {
-        htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Room type: ${detail.room_type}</p><br/>`
-        htmlReceipt = htmlReceipt + `<p>Price per night: $${detail.price_per_night}</p><br/>`
-        htmlReceipt = htmlReceipt + `<p>Room number: ${detail.roomNumber}</p><br/>`
-        htmlReceipt = htmlReceipt + `<p>Check-in date: ${formatDate(detail.checkin_date)}</p><br/>`
-        htmlReceipt = htmlReceipt + `<p>Check-out date: ${formatDate(detail.checkout_date)}</p><br/>`
+        htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Room type: ${detail.room_type}</p>`
+        htmlReceipt = htmlReceipt + `<p>Price per night: $${detail.price_per_night}</p>`
+        htmlReceipt = htmlReceipt + `<p>Room number: ${detail.roomNumber}</p>`
+        htmlReceipt = htmlReceipt + `<p>Check-in date: ${formatDate(detail.checkin_date)}</p>`
+        htmlReceipt = htmlReceipt + `<p>Check-out date: ${formatDate(detail.checkout_date)}</p>`
         htmlReceipt = htmlReceipt + `<p>Number of nights: ${detail.number_of_nights}</p><br/>`
       })
      
