@@ -216,7 +216,7 @@ const stripeWebHook = async (req, res, next) => {
       let htmlReceipt = ''
       htmlReceipt = htmlReceipt + `<p>Booking reference: ${confirmedBooking._id}</p>`
       htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Customer name: ${customerDetails.name}</p>`
-      htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Hotel name: <strong>${hotelDetails.name}</strong></p>`
+      htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Hotel name: <strong>${hotelDetails.name}</strong></p><br/>`
       confirmedBooking.bookingDetails.forEach(detail => {
         htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Room type: ${detail.room_type}</p>`
         htmlReceipt = htmlReceipt + `<p>Price per night: $${detail.price_per_night}</p>`

@@ -30,7 +30,7 @@ const sendOutMail = async (newUser) => {
             ],
             from: {
                 email: "dezeabasili@gmail.com", // Change to your verified sender
-                name: "Support Team"
+                name: "Meridian Hosts"
             },
             templateId: "d-92e13d18493d48c09f99ebb8c0bcf56b",
             dynamicTemplateData: {

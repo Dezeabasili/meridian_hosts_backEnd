@@ -6,7 +6,7 @@ require('dotenv').config()
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const sendOutMail = async (newUser, booking) => {
-    const names = ['Owerri', 'Aba']
+
     try {
         // const filePath = await fsPromises.readFile(path.join(__dirname, '..', 'public', 'admin-005', 'customerPreferredProfilePhoto2.jpg'))
         // let buffer = Buffer.from(filePath, "utf-8").toString("base64")
@@ -31,7 +31,7 @@ const sendOutMail = async (newUser, booking) => {
             ],
             from: {
                 email: "dezeabasili@gmail.com", // Change to your verified sender
-                name: "Support Team"
+                name: "Meridian Hosts"
             },
             subject: "Receipt for booking",
             // html: `Hi customer, you just signed in as<br/>${names.map(name => {return(name, '<br/>')})}`

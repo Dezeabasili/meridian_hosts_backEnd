@@ -29,7 +29,7 @@ const passwordResetMail = async (person, passwordReset) => {
             ],
             from: {
                 email: "dezeabasili@gmail.com", // Change to your verified sender
-                name: "Support Team"
+                name: "Meridian Hosts"
             },
             templateId: "d-6f2b6e3466d5428db9ae90d9183e5808",
             dynamicTemplateData: {
