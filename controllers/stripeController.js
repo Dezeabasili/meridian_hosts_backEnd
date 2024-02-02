@@ -200,10 +200,18 @@ const stripeWebHook = async (req, res, next) => {
       // console.log('newBooking: ', newBooking)
 
       const confirmedBooking = await Booking.create({ ...newBooking });
-      const customerDetails = await User.findById(user_id)
+      // const customerDetails = await User.findById(user_id)
+
+      let htmlReceipt = ''
+      htmlReceipt = htmlReceipt + `<p>Booking reference: ${confirmedBooking._id}</p><br/>`
+      htmlReceipt = htmlReceipt + `<p>Customer name: ${confirmedBooking.user.name}</p><br/>`
+      confirmedBooking.bookingDetails.forEach(detail => {
+        htmlReceipt = htmlReceipt + `<p>Room type: ${detail.room_type}</p><br/>`
+      })
+     
 
       console.log("confirmedBooking: ", confirmedBooking);
-      await sendOutMail(customerDetails, confirmedBooking)
+      await sendOutMail(confirmedBooking.user, htmlReceipt)
 
       selectedRooms.forEach(async (room_id) => {
         await updateRoomAvailability(room_id, reservedDates);
