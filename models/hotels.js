@@ -21,13 +21,11 @@ const HotelSchema = new Schema(
     },
     description: {
       type: String,
-      required: [true, "Please provide a brief description of the hotel"],
-      lowercase: true,
+      required: [true, "Please provide a brief description of the hotel"]
     },
     detailedDescription: {
       type: String,
       required: [true, "Please provide a detailed description of the hotel and its facilities"],
-      lowercase: true,
     },
     hotelLocation: {
       type: {
@@ -37,13 +35,11 @@ const HotelSchema = new Schema(
       },
       coordinates: [Number],
       address: {
-        type: String,
-        lowercase: true,
+        type: String
       },
     },
     closestTouristLocation: {
-      type: String,
-      lowercase: true
+      type: String
     },
     distanceToClosestTouristLocation: {
       type: Number,
@@ -57,12 +53,14 @@ const HotelSchema = new Schema(
         },
         coordinates: [Number],
         address: {
-          type: String,
-          lowercase: true,
+          type: String
         },
       },
     ],
     photos: {
+      type: String,
+    },
+    photo_id: {
       type: String,
     },
     numberOfRatings: {

@@ -18,14 +18,16 @@ const RoomSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: [true, 'Please provide room description'],
-        lowercase: true
+        required: [true, 'Please provide room description']
     },
     roomNumbers: [{
         number: Number,
         unavailableDates: [Date]
     }],
     photos: {
+        type: [String]
+    },
+    photo_id: {
         type: [String]
     },
     hotel: {

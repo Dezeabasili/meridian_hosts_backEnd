@@ -8,6 +8,14 @@ const Booking = require("./../models/bookings");
 const Hotel = require("./../models/hotels");
 const Review = require("./../models/reviews");
 const sendOutMail = require('../utils/handleSubscriptionEmail')
+const cloudinary = require("cloudinary").v2
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    secure: true
+})
 
 // get all users
 const getAllUsers = async (req, res, next) => {
@@ -242,19 +250,7 @@ const seeMyPhoto = async (req, res, next) => {
     if (!loggedInUser)
       return next(createError("fail", 404, "This user no longer exists"));
 
-    let filePath;
-    if (loggedInUser.photo === "default_profile_pic.png") {
-      filePath = path.join(
-        __dirname,
-        "..",
-        "public",
-        "default_profile_pic.png"
-      );
-
-      return res.status(200).sendFile(filePath)
-    } else {
       return res.status(200).json({data: loggedInUser.photo});
-    }
  
   } catch (err) {
     next(err);
@@ -268,9 +264,15 @@ const deleteMyPhoto = async (req, res, next) => {
     const loggedInUser = await User.findById(req.userInfo.id);
     if (!loggedInUser)
       return next(createError("fail", 404, "This user no longer exists"));
-      
+      const publicId = loggedInUser.photo_id
       loggedInUser.photo = 'https://res.cloudinary.com/dmth3elzl/image/upload/v1705633392/profilephotos/edeo8b4vzeppeovxny9c.png'
+      loggedInUser.photo_id = undefined
+
       await loggedInUser.save()
+      if (publicId) {
+        await cloudinary.uploader.destroy(publicId)
+      }
+
       return res.status(204).json("profile photo changed successfully")
    
   } catch (err) {

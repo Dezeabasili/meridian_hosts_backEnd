@@ -6,8 +6,7 @@ const { Schema } = mongoose
 const ReviewSchema = new Schema({
     review: {
         type: String,
-        required: [true, 'Please provide a review'],
-        lowercase: true
+        required: [true, 'Please provide a review']
     },
     rating: {
         type: Number,
