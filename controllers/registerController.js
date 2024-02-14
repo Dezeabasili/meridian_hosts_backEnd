@@ -16,6 +16,18 @@ const register = async (req, res, next) => {
             password: encryptedPassword
         })
 
+        // check if username already exist
+        const duplicateUsername = await User.findOne({username: username})
+        if (duplicateUsername) {
+            return next(createError('fail', 400, "username already exist"))
+        }
+
+        // check if email already exist
+        const duplicateEmail = await User.findOne({email: email})
+        if (duplicateEmail) {
+            return next(createError('fail', 400, "email already exist"))
+        }
+
         // There is a pre save hook in the users file, in the models directory, that updates the passwordResetTime property 
         const user = await newUser.save()
 

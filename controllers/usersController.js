@@ -172,7 +172,7 @@ const usersByCategories = async (req, res, next) => {
   }
 };
 
-// the request handler below is for a logged in user who wants to change his/her data in the database
+// // the request handler below is for a logged in user who wants to change his/her data in the database
 const updateMyAccount = async (req, res, next) => {
   try {
     // get user with the user id
@@ -180,10 +180,7 @@ const updateMyAccount = async (req, res, next) => {
     if (!loggedInUser)
       return next(createError("fail", 404, "This user no longer exists"));
 
-    // get user information to update
-    if (req.body.email) loggedInUser.email = req.body.email;
-    if (req.body.username) loggedInUser.username = req.body.username;
-    if (req.body.name) loggedInUser.name = req.body.name;
+    // check if user provided any information to update
     if (!req.body.email && !req.body.username && !req.body.name)
       return next(
         createError(
@@ -192,6 +189,27 @@ const updateMyAccount = async (req, res, next) => {
           "You did not provide any information to update"
         )
       );
+
+    // get user information to update
+    if (req.body.email) {
+      // check if email already exist
+      const duplicateEmail = await User.findOne({ email: req.body.email });
+      if (duplicateEmail) {
+        return next(createError("fail", 400, "email already exist"));
+      }
+      loggedInUser.email = req.body.email;
+    }
+    if (req.body.username) {
+      // check if username already exist
+      const duplicateUsername = await User.findOne({
+        username: req.body.username,
+      });
+      if (duplicateUsername) {
+        return next(createError("fail", 400, "username already exist"));
+      }
+      loggedInUser.username = req.body.username;
+    }
+    if (req.body.name) loggedInUser.name = req.body.name;
 
     // update user information
     await loggedInUser.save();
