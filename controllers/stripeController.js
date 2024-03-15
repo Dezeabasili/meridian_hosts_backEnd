@@ -213,10 +213,17 @@ const stripeWebHook = async (req, res, next) => {
       const customerDetails = await User.findById(user_id)
       const hotelDetails = await Hotel.findById(hotel_id)
 
+      const bookingDate = new Intl.DateTimeFormat('en-US', {
+        dateStyle: 'full',
+        timeStyle: 'long',
+        timeZone: 'CST',
+      }).format(confirmedBooking.createdAt)
+
       let htmlReceipt = ''
       htmlReceipt = htmlReceipt + `<p>Booking reference: ${confirmedBooking._id}</p>`
       htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Customer name: ${customerDetails.name}</p>`
       htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Hotel name: <strong>${hotelDetails.name}</strong></p><br/>`
+      htmlReceipt = htmlReceipt + `<p>Booking date: ${bookingDate}</p><br/>`
       confirmedBooking.bookingDetails.forEach(detail => {
         htmlReceipt = htmlReceipt + `<p style="text-transform: capitalize">Room type: ${detail.room_type}</p>`
         htmlReceipt = htmlReceipt + `<p>Price per night: $${detail.price_per_night}</p>`
