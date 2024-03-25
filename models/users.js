@@ -34,7 +34,7 @@ const UserSchema = new mongoose.Schema({
     },
     roles: {
         type: Number,
-        default: 2010
+        default: 2030
     },
     photo: {
         type: String,
