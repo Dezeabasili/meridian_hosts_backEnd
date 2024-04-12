@@ -24,6 +24,8 @@ const roomsRouter = require("./routes/rooms");
 const reviewsRouter = require("./routes/reviews");
 const stripeRouter = require("./routes/stripe");
 const bookingsRouter = require("./routes/bookings");
+const chatsRouter = require("./routes/chats");
+const messagesRouter = require("./routes/messages");
 const createError = require("./utils/error");
 const app = express();
 const PORT = process.env.PORT || 4000
@@ -107,6 +109,8 @@ app.use("/api/v1/rooms", roomsRouter);
 app.use("/api/v1/reviews", reviewsRouter);
 app.use("/api/v1/stripe", stripeRouter);
 app.use("/api/v1/bookings", bookingsRouter);
+app.use("/api/v1/chats", chatsRouter);
+app.use("/api/v1/messages", messagesRouter);
 // app.use("/api/v1/pictures", picturesRouter);
 
 app.all("*", (req, res, next) => {
@@ -197,6 +201,41 @@ const server = app.listen(PORT, () => {
   connect();
   console.log("listening on port 4000");
 });
+
+
+// continue tomorrow 13-Apr-2024
+
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "https://meridianhomes.onrender.com"
+  }
+})
+
+io.on("connection", (socket) => {
+  console.log("Connected to socket.io")
+
+  socket.on("join chat room", (roomObj) => {
+    console.log("roomObj: ", roomObj)
+    if (roomObj.oldRoom) {
+      socket.leave(roomObj.oldRoom)
+    }
+    socket.join(roomObj.newRoom)
+  })
+
+  socket.on("new message", (newMessage) => {
+    console.log("newMessage.chatInfo._id: ", newMessage.chatInfo._id)
+    socket.broadcast.to(newMessage.chatInfo._id).emit("received message", newMessage)
+  })
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected")
+  })
+})
+
+
+
+
 
 // globally handle rejected promises from asynchronous processes. Errors that occur outside express
 process.on("unhandledRejection", (err) => {
