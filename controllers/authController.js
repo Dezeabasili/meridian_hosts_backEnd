@@ -32,11 +32,13 @@ const login = async (req, res, next) => {
 
         const assignedRoles = user.roles
         const profilePhoto = user.photo
+        const user_id = user._id
 
         res.status(200).json({
             accessToken,
             assignedRoles,
-            profilePhoto
+            profilePhoto,
+            user_id
         })
 
     } catch (err) {
