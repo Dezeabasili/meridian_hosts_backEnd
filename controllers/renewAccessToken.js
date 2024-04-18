@@ -28,7 +28,7 @@ const renewAccessToken = async (req, res, next) => {
     // generate new access token
     const accessToken = jwt.sign({ id: user._id, assignedRoles: user.roles }, process.env.ACCESS_TOKEN, { expiresIn: '1d' })
 
-    res.json({ accessToken, assignedRoles: user.roles, user_id: user._id })
+    res.json({ accessToken, assignedRoles: user.roles, user_id: user._id, profilePhoto: user.photo })
 }
 
 module.exports = renewAccessToken

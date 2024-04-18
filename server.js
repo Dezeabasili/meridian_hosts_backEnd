@@ -199,11 +199,10 @@ app.use((err, req, res, next) => {
 
 const server = app.listen(PORT, () => {
   connect();
-  console.log("listening on port 4000");
+  // console.log("listening on port 4000");
 });
 
-
-// continue tomorrow 13-Apr-2024
+let onlineUsers = [];
 
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
@@ -213,25 +212,53 @@ const io = require("socket.io")(server, {
 })
 
 io.on("connection", (socket) => {
-  console.log("Connected to socket.io")
+  socket.on("Update online users", (newOnlineUser) => {
+    let onlineList = onlineUsers.filter((user) => {
+      return user.user_id != newOnlineUser;
+    });
+    onlineUsers = [...onlineList];
+
+    let userObj = {};
+    userObj.socket_id = socket.id;
+    userObj.user_id = newOnlineUser;
+    onlineUsers.push(userObj);
+ 
+    socket.join(newOnlineUser);
+    io.emit("send online users", onlineUsers);
+  });
 
   socket.on("join chat room", (roomObj) => {
-    console.log("roomObj: ", roomObj)
     if (roomObj.oldRoom) {
-      socket.leave(roomObj.oldRoom)
+      socket.leave(roomObj.oldRoom);
     }
-    socket.join(roomObj.newRoom)
-  })
+    socket.join(roomObj.newRoom);
+  });
 
   socket.on("new message", (newMessage) => {
-    console.log("newMessage.chatInfo._id: ", newMessage.chatInfo._id)
-    socket.broadcast.to(newMessage.chatInfo._id).emit("received message", newMessage)
-  })
+    // get all the members of the chat
+    const members = newMessage.chatInfo.members;
+
+    // send the message to all the members based on their room when they log in
+    members.forEach((member) => {
+      if (member._id == newMessage.sentBy._id) return;
+      socket.to(member._id).emit("received message", newMessage);
+    });
+
+  });
+
+  socket.on("error", (err) => {
+    socket.disconnect();
+  });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected")
-  })
-})
+    let onlineList = onlineUsers.filter((user) => {
+      return user.socket_id != socket.id;
+    });
+    onlineUsers = [...onlineList];
+    io.emit("send online users", onlineUsers);
+
+  });
+});
 
 
 
