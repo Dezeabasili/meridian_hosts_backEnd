@@ -167,9 +167,9 @@ const stripeWebHook = async (req, res, next) => {
       const dateObj = new Date(lastNight);
       dateObj.setDate(dateObj.getDate() + 1);
       const checkout_date = dateObj;
-      console.log("Check out date: ", dateObj);
-      console.log("Check in date: ", checkin_date);
-      console.log("last night: ", lastNight);
+      // console.log("Check out date: ", dateObj);
+      // console.log("Check in date: ", checkin_date);
+      // console.log("last night: ", lastNight);
 
       // get room information
 
@@ -179,7 +179,7 @@ const stripeWebHook = async (req, res, next) => {
         "roomNumbers._id": { $in: selectedRooms },
       });
 
-      console.log("roomTypeArray: ", roomTypeArray);
+      // console.log("roomTypeArray: ", roomTypeArray);
 
       let newBooking = {};
       newBooking.user = user_id;

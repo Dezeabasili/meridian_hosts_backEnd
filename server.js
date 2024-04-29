@@ -207,7 +207,6 @@ let onlineUsers = [];
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    // origin: "https://meridianhomes.onrender.com"
     origin: "http://localhost:3000"
   }
 })
